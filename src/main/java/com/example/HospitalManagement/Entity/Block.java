@@ -1,4 +1,4 @@
 package com.example.HospitalManagement.Entity;
 
-public class Department {
+public class Block {
 }

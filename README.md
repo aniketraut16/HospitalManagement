@@ -1,5 +1,6 @@
 # folder Structure : ***
 
+```
 hospital-management-system/
 │
 ├── src/main/java/com/hospital/management/
@@ -112,3 +113,7 @@ hospital-management-system/
 │
 ├── pom.xml
 └── README.md
+
+
+
+```
