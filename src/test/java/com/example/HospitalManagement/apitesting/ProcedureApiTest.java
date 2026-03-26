@@ -1,6 +1,8 @@
 package com.example.HospitalManagement.apitesting;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -25,4 +27,29 @@ public class ProcedureApiTest {
         mockMvc.perform(get("/procedures?page=0&size=5"));
 
 }
+    @Test
+    void testGetAllProcedures_NoData_ShouldReturnEmpty() throws Exception {
+
+        mockMvc.perform(get("/procedures?page=0&size=5"))
+            .andDo(print())
+            .andExpect(status().isOk());
+}
+    @Test
+    void testProceduresByName_Success() throws Exception{
+
+    mockMvc.perform(get("/procedures/search/findByNameIgnoreCase")
+            .param("name","Reverse Rhinopodoplasty"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.procedures[0].name")
+                    .value("Reverse Rhinopodoplasty"));
+    }
+
+    @Test
+    void testGetProcedureByName_NotFound() throws Exception{
+    mockMvc.perform(get("/procedures/search/findByNameIgnoreCase")
+            .param("name","xyz"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.procedures").isEmpty());
+    }
+
 }
