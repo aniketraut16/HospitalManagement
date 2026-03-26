@@ -31,5 +31,32 @@ public class RoomApiTest {
                 .andExpect(jsonPath("$.page.size").value(5))
                 .andExpect(jsonPath("$.page.number").value(0));
     }
+
+    @Test
+    @DisplayName("API Test: findByRoomType=ICU should return 200 with room data")
+    void testFindByRoomType_ICU_ReturnsOk() throws Exception {
+        mockMvc.perform(get("/rooms/search/findByRoomType")
+                        .param("type", "ICU")
+                        .param("page", "0")
+                        .param("size", "5"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$._embedded.rooms").isArray())
+                .andExpect(jsonPath("$._embedded.rooms[*].roomType").exists())
+                .andExpect(jsonPath("$.page").exists())
+                .andExpect(jsonPath("$.page.size").value(5))
+                .andExpect(jsonPath("$.page.number").value(0));
+    }
+
+    @Test
+    @DisplayName("API Test: findByRoomType=NonExistent should return 200 with empty result")
+    void testFindByRoomType_NonExistent_ReturnsEmpty() throws Exception {
+        mockMvc.perform(get("/rooms/search/findByRoomType")
+                        .param("type", "NonExistent")
+                        .param("page", "0")
+                        .param("size", "5"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.page").exists())
+                .andExpect(jsonPath("$.page.totalElements").value(0));
+    }
     
 }

@@ -44,7 +44,27 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
+      - name: Wait for MySQL to be Ready
+        run: |
+          for i in {1..30}; do
+            if mysqladmin ping -h "127.0.0.1" -P 3307 -u dev -proot --silent; then
+              echo "MySQL is ready!"
+              break
+            fi
+            echo "Waiting for MySQL..."
+            sleep 2
+          done
+
+      - name: Initialize Database Schema
+        run: |
+          mysql -h 127.0.0.1 -P 3307 -u dev -proot < schema.sql
+          echo "Database schema initialized successfully!"
+
       - name: Build JAR
+        env:
+          SPRING_DATASOURCE_URL: jdbc:mysql://127.0.0.1:3307/hms_copy
+          SPRING_DATASOURCE_USERNAME: dev
+          SPRING_DATASOURCE_PASSWORD: root
         run: mvn clean package -DskipTests
 
       - name: Run Tests
