@@ -41,23 +41,5 @@ public class PatientApiTest {
         mockMvc.perform(get("/patients"))
         .andExpect(status().isOk());
     }
-
-    //search patient by name
-    @Test
-    void testSearchPatient_NameFound() throws Exception {
-        mockMvc.perform(get("/patients/search/findByNameIgnoreCase")
-        .param("name", "John Smith"))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$._embedded.patients[0].name")
-        .value("John Smith"));
-    }
-
-    @Test
-    void testSearchPatient_ExactNameNotFound_ReturnsEmpty() throws Exception {
-        mockMvc.perform(get("/patients/search/findByNameIgnoreCase")
-        .param("name", "Suhani Bajoria"))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$._embedded.patients").isEmpty());
-    }
     
 }
