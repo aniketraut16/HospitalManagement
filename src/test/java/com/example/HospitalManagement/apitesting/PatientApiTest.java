@@ -18,5 +18,6 @@ public class PatientApiTest {
     void testGetAllPatients_PaginationSuccess() throws Exception{
         mockMvc.perform(get("/patients?page=0&size=5"));
     }
+    
 
 }
