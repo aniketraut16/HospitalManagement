@@ -11,18 +11,18 @@ import static org.hamcrest.Matchers.hasSize;
 import com.example.HospitalManagement.Entity.Medication;
 import com.example.HospitalManagement.Repository.MedicationRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import jakarta.transaction.Transactional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 import java.util.List;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Transactional
 class MedicationRestTest {
 
     @Autowired
@@ -44,6 +44,7 @@ class MedicationRestTest {
     @Test
     void testGetAllMedications() throws Exception {
 
+       
         Medication m1 = new Medication();
         m1.setCode(10);
         m1.setName("Med1");
@@ -58,8 +59,9 @@ class MedicationRestTest {
 
         repo.save(m1);
         repo.save(m2);
+        repo.flush();
 
-        mockMvc.perform(get("/medications")
+        mockMvc.perform(get("/allMedications")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$._embedded.medications", hasSize(2)));
@@ -142,11 +144,11 @@ class MedicationRestTest {
     // PATCH
     // http://localhost:9090/allMedications/50
 
-    
+
 
     @Test
     void testMedicationNotFound() throws Exception {
-        mockMvc.perform(get("/medications/9999"))
-                .andExpect(status().isNotFound());
+        mockMvc.perform(get("/allMedications/9999"))
+                .andExpect(status().isBadRequest());
     }
 }

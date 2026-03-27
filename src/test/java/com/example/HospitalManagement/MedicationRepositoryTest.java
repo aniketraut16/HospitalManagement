@@ -5,16 +5,33 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.List;
 import java.util.Optional;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import com.example.HospitalManagement.Entity.Medication;
 import com.example.HospitalManagement.Repository.MedicationRepository;
 
+import jakarta.transaction.Transactional;
+
 @SpringBootTest
+@Transactional
 class MedicationRepositoryTest {
     @Autowired
     private MedicationRepository repository;
+
+    // create Base Data
+    @BeforeEach
+    void setup() {
+        Medication med = new Medication();
+        med.setCode(1);
+        med.setName("Procrastin-X");
+        med.setBrand("TestBrand");
+        med.setDescription("Test");
+
+        repository.save(med);
+    }
 
     // debug test
     @Test
@@ -26,10 +43,10 @@ class MedicationRepositoryTest {
     // Test case 1 : find by a particular Id
     @Test
     void testFindById_Exists() {
-        Optional<Medication> med = repository.findById(1);
+        Optional<Medication> getmed = repository.findById(1);
 
-        assertTrue(med.isPresent());
-        assertEquals("Procrastin-X", med.get().getName());
+        assertTrue(getmed.isPresent());
+        assertEquals("Procrastin-X", getmed.get().getName());
     }
 
     // Test case 2 : check if an Id not Exists
