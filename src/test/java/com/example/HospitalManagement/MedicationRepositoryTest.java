@@ -1,35 +1,20 @@
 package com.example.HospitalManagement;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import java.util.Optional;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestPropertySource;
 import com.example.HospitalManagement.Entity.Medication;
 import com.example.HospitalManagement.Repository.MedicationRepository;
 
 @SpringBootTest
-// @ActiveProfiles("test")
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-@TestPropertySource(properties = {
-        "spring.jpa.hibernate.ddl-auto=create-drop"
-})
 class MedicationRepositoryTest {
     @Autowired
     private MedicationRepository repository;
-
-    @BeforeEach
-    void setUp(){
-        // repository.deleteAll();
-    }
 
     // debug test
     @Test
