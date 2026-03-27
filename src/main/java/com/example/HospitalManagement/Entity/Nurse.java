@@ -1,80 +1,69 @@
 package com.example.HospitalManagement.Entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.List;
 
 @Entity
-@Table(name="nurse")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "Nurse")
 public class Nurse {
 
     @Id
-    @Column(name="EmployeeId")
-    private int employeeId;
+    @Column(name = "EmployeeID")
+    private Integer employeeId;
 
+    @NotNull
+    @Size(max = 30)
     @Column(name = "Name", nullable = false, length = 30)
     private String name;
 
-    @Column(name = "Position", length = 30)
+    @NotNull
+    @Size(max = 30)
+    @Column(name = "Position", nullable = false, length = 30)
     private String position;
 
-    @Column(name = "Registered")
-    private boolean registered;
+    @NotNull
+    @Column(name = "Registered", nullable = false)
+    private Boolean registered;
 
-    @Column(name = "SSN", unique = true)
-    private String ssn;
+    @NotNull
+    @Column(name = "SSN", nullable = false)
+    private Integer ssn;
 
-    public Nurse() {}
-    public Nurse(int employeeId, String name, String position, boolean registered, String ssn) {
+    @JsonIgnore
+    @OneToMany(mappedBy = "prepNurse", fetch = FetchType.LAZY)
+    private List<Appointment> appointments;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "nurse", fetch = FetchType.LAZY)
+    private List<OnCall> onCallSchedules;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "assistingNurse", fetch = FetchType.LAZY)
+    private List<Undergoes> assistedProcedures;
+
+    public Nurse(Integer employeeId, String name, String position, Boolean registered, String ssn) {
         this.employeeId = employeeId;
         this.name = name;
         this.position = position;
         this.registered = registered;
-        this.ssn = ssn;
-    }
-
-    public int getEmployeeId() {
-        return employeeId;
-    }
-
-    public void setEmployeeId(int employeeId) {
-        this.employeeId = employeeId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPosition() {
-        return position;
-    }
-
-    public void setPosition(String position) {
-        this.position = position;
-    }
-
-    public boolean isRegistered() {
-        return registered;
-    }
-
-    public void setRegistered(boolean registered) {
-        this.registered = registered;
-    }
-
-    public String getSsn() {
-        return ssn;
-    }
-
-    public void setSsn(String ssn) {
-        this.ssn = ssn;
+        this.ssn = Integer.parseInt(ssn);
     }
 
     @Transient
     public String getAvailability() {
         return "AVAILABLE";
     }
-
 }
