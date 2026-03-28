@@ -60,10 +60,10 @@ public class StayApiTes {
     private BlockRepository blockRepository;
 
     private List<Physician> physicians;
-    private List<Patient>   patients;
-    private Block           testBlock;
-    private Room            testRoom;
-    private List<Stay>      stays;
+    private List<Patient> patients;
+    private Block testBlock;
+    private Room testRoom;
+    private List<Stay> stays;
 
     @BeforeEach
     void setUp() {
@@ -139,14 +139,14 @@ public class StayApiTes {
         stay1.setPatientEntity(patient1);
         stay1.setRoom(testRoom);
         stay1.setStayStart(new Date(1735929000000L)); // 04/01/2026
-        stay1.setStayEnd(new Date(1738175400000L));   // 30/01/2026
+        stay1.setStayEnd(new Date(1738175400000L)); // 30/01/2026
 
         Stay stay2 = new Stay();
         stay2.setStayId(800002);
         stay2.setPatientEntity(patient2);
         stay2.setRoom(testRoom);
         stay2.setStayStart(new Date(1738434600000L)); // 02/02/2026
-        stay2.setStayEnd(new Date(1740249000000L));   // 23/02/2026
+        stay2.setStayEnd(new Date(1740249000000L)); // 23/02/2026
 
         // Active stay — stayEnd is in the future
         Stay stay3 = new Stay();
@@ -182,9 +182,9 @@ public class StayApiTes {
     @DisplayName("API Test #1: findByRoom_RoomNumber with existing room - should return 200 with stay list")
     void testFindByRoomNumber_ExistingRoom_ReturnsOk() throws Exception {
         mockMvc.perform(get("/stays/search/findByRoom_RoomNumber")
-                        .param("roomNumber", "80001")
-                        .param("page", "0")
-                        .param("size", "10"))
+                .param("roomNumber", "80001")
+                .param("page", "0")
+                .param("size", "10"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$._embedded.stays").isArray())
                 .andExpect(jsonPath("$.page.totalElements").value(4))
@@ -196,9 +196,9 @@ public class StayApiTes {
     @DisplayName("API Test #2: findByRoom_RoomNumber projection fields - should include patientName, stayStart, stayEnd, status")
     void testFindByRoomNumber_ProjectionFields_Present() throws Exception {
         mockMvc.perform(get("/stays/search/findByRoom_RoomNumber")
-                        .param("roomNumber", "80001")
-                        .param("page", "0")
-                        .param("size", "10"))
+                .param("roomNumber", "80001")
+                .param("page", "0")
+                .param("size", "10"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$._embedded.stays[0].patientName").exists())
                 .andExpect(jsonPath("$._embedded.stays[0].stayStart").exists())
@@ -210,9 +210,9 @@ public class StayApiTes {
     @DisplayName("API Test #3: status is 'Completed' for stays with past stayEnd")
     void testFindByRoomNumber_PastStayEnd_StatusIsCompleted() throws Exception {
         mockMvc.perform(get("/stays/search/findByRoom_RoomNumber")
-                        .param("roomNumber", "80001")
-                        .param("page", "0")
-                        .param("size", "10"))
+                .param("roomNumber", "80001")
+                .param("page", "0")
+                .param("size", "10"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$._embedded.stays[?(@.patientName == 'Rohit')].status")
                         .value("Completed"))
@@ -224,9 +224,9 @@ public class StayApiTes {
     @DisplayName("API Test #4: status is 'Active' for stays with future stayEnd")
     void testFindByRoomNumber_FutureStayEnd_StatusIsActive() throws Exception {
         mockMvc.perform(get("/stays/search/findByRoom_RoomNumber")
-                        .param("roomNumber", "80001")
-                        .param("page", "0")
-                        .param("size", "10"))
+                .param("roomNumber", "80001")
+                .param("page", "0")
+                .param("size", "10"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$._embedded.stays[?(@.patientName == 'Rahul')].status")
                         .value("Active"))
@@ -238,9 +238,9 @@ public class StayApiTes {
     @DisplayName("API Test #5: findByRoom_RoomNumber with non-existing room - should return 200 with empty list")
     void testFindByRoomNumber_NonExistingRoom_ReturnsEmpty() throws Exception {
         mockMvc.perform(get("/stays/search/findByRoom_RoomNumber")
-                        .param("roomNumber", "999999")
-                        .param("page", "0")
-                        .param("size", "10"))
+                .param("roomNumber", "999999")
+                .param("page", "0")
+                .param("size", "10"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.page.totalElements").value(0));
     }
@@ -249,9 +249,9 @@ public class StayApiTes {
     @DisplayName("API Test #6: findByRoom_RoomNumber pagination - page 0 size 2 should return 2 records")
     void testFindByRoomNumber_Pagination_ReturnsCorrectPage() throws Exception {
         mockMvc.perform(get("/stays/search/findByRoom_RoomNumber")
-                        .param("roomNumber", "80001")
-                        .param("page", "0")
-                        .param("size", "2"))
+                .param("roomNumber", "80001")
+                .param("page", "0")
+                .param("size", "2"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$._embedded.stays").isArray())
                 .andExpect(jsonPath("$.page.size").value(2))
@@ -264,8 +264,8 @@ public class StayApiTes {
     @DisplayName("API Test #7: findByRoom_RoomNumber missing roomNumber param - should return 200 with empty list")
     void testFindByRoomNumber_MissingParam_ReturnsEmptyList() throws Exception {
         mockMvc.perform(get("/stays/search/findByRoom_RoomNumber")
-                        .param("page", "0")
-                        .param("size", "10"))
+                .param("page", "0")
+                .param("size", "10"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.page.totalElements").value(0));
     }
@@ -274,9 +274,9 @@ public class StayApiTes {
     @DisplayName("API Test #8: findByRoom_RoomNumber with non-numeric roomNumber - should return 500 (conversion error)")
     void testFindByRoomNumber_NonNumericParam_ReturnsServerError() throws Exception {
         mockMvc.perform(get("/stays/search/findByRoom_RoomNumber")
-                        .param("roomNumber", "abc")
-                        .param("page", "0")
-                        .param("size", "10"))
+                .param("roomNumber", "abc")
+                .param("page", "0")
+                .param("size", "10"))
                 .andExpect(status().isInternalServerError());
     }
 }
