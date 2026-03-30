@@ -33,19 +33,19 @@ public class PhysicianRestTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Test
+   @Test
     void testGetAllPhysicians() throws Exception {
         Physician p1 = new Physician();
-        p1.setEmployeeId(80001); // Safe IDs
+        p1.setEmployeeId(80091); // <-- Changed to a brand new ID
         p1.setName("Nikhil_Test"); 
         p1.setPosition("Surgeon");
-        p1.setSsn(8885551); 
+        p1.setSsn(8885591);      // <-- Changed to a brand new SSN
 
         Physician p2 = new Physician();
-        p2.setEmployeeId(80002);
+        p2.setEmployeeId(80092); // <-- Changed to a brand new ID
         p2.setName("Rahul_Test");
         p2.setPosition("Cardio");
-        p2.setSsn(8886662);
+        p2.setSsn(8886692);      // <-- Changed to a brand new SSN
 
         repo.save(p1);
         repo.save(p2);
